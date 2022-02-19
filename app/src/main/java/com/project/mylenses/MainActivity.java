@@ -27,18 +27,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         fabAdd = findViewById(floatingActionButtonAdd);
         txtLostUses = findViewById(TextLostUses);
         UpdateLostUses();
 
-        fabAdd.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showDialog();
-
-            }
-        });
 
     }
 
@@ -65,6 +57,14 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume(){
         super.onResume();
+
+        fabAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showDialog();
+
+            }
+        });
         Log.d(TAG, "onResume");
     }
 

@@ -1,82 +1,68 @@
 package com.project.mylenses;
 
-import java.util.Date;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 public class LensControl {
-
-    private Integer nowCount;
-    private Integer endCount;
-    private Date nowDate;
-    private Date endDate;
+    private String countingMode;
+    private Integer countUses;
+    private Calendar nowDate;
+    private Calendar endDate;
 
     public LensControl()
     {
-        nowCount = 0;
-        endCount = 0;
+        countUses = 0;
     }
 
-    public LensControl(Integer nowCount, String up) {
-        this.nowCount = nowCount;
-        this.endCount = endCount;
+    public LensControl(Integer countUses,  Calendar nowDate, Calendar endDate, String countingMode) {
+        this.countUses = countUses;
         this.nowDate = nowDate;
         this.endDate = endDate;
-    }
-
-    public LensControl(Integer endCount) {
-        this.nowCount = nowCount;
-        this.endCount = endCount;
-        this.nowDate = nowDate;
-        this.endDate = endDate;
-    }
-
-    public LensControl(Integer nowCount, Integer endCount, Date nowDate, Date endDate) {
-        this.nowCount = nowCount;
-        this.endCount = endCount;
-        this.nowDate = nowDate;
-        this.endDate = endDate;
+        this.countingMode = countingMode;
     }
 
 
-    public Integer getNowCount() {
-        return nowCount;
+    public Integer getCountUses() {
+        return countUses;
     }
 
-    public void setNowCount(Integer nowCount) {
-        this.nowCount = nowCount;
+    public void setCountUses(Integer nowCount) {
+        this.countUses = nowCount;
     }
 
-    public Integer getEndCount() {
-        return endCount;
-    }
-
-    public void setEndCount(Integer endCount) {
-        this.endCount = endCount;
-    }
-
-    public Date getNowDate() {
+    public Calendar getNowDate() {
         return nowDate;
     }
 
-    public void setNowDate(Date nowDate) {
+    public void setNowDate(Calendar nowDate) {
         this.nowDate = nowDate;
     }
 
-    public Date getEndDate() {
+    public Calendar getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(Date endDate) {
+    public void setEndDate(Calendar endDate) {
         this.endDate = endDate;
     }
 
-    public void nowCountPlus()
+    public String getCountingMode(){ return countingMode;}
+
+    public void setCountingMode(String countingMode){ this.countingMode = countingMode;}
+
+    public void countUsesPlus()
     {
-        nowCount += 1;
-    }
-    public void nowCountMinus()
-    {
-        nowCount -= 1;
+        countUses += 1;
     }
 
+    public void countUsesMinus()
+    {
+        countUses -= 1;
+    }
 
+    public static Calendar createEndDate(Integer count, Calendar nowDay){
+        Calendar endDay = nowDay;
+        endDay.add(Calendar.DAY_OF_MONTH, count);
+        return endDay;
+    }
 }

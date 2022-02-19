@@ -2,6 +2,7 @@ package com.project.mylenses;
 
 import static android.content.ContentValues.TAG;
 import static com.project.mylenses.R.id.TextLostUses;
+import static com.project.mylenses.R.id.floatingActionButtonAdd;
 import static com.project.mylenses.R.id.toSettings;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,15 +12,33 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 public class MainActivity extends AppCompatActivity {
+
+    private FloatingActionButton fabAdd;
+    private TextView txtLostUses;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        fabAdd = findViewById(floatingActionButtonAdd);
+        txtLostUses = findViewById(TextLostUses);
         UpdateLostUses();
+
+        fabAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showDialog();
+
+            }
+        });
 
     }
 
@@ -75,8 +94,12 @@ public class MainActivity extends AppCompatActivity {
 
     public void UpdateLostUses(){
 
-        TextView textLostUses = findViewById(TextLostUses);
-        textLostUses.setText("try");
+        txtLostUses.setText("try");
+    }
+
+    public void showDialog(){
+        DialogFragmentAddLens dialog = new DialogFragmentAddLens();
+        dialog.show(getSupportFragmentManager(), "Add");
     }
 
 

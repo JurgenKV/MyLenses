@@ -9,34 +9,64 @@ public class LensControl {
     private Date nowDate;
     private Date endDate;
 
-    /*
-    LensControl()
+    public LensControl()
     {
         nowCount = 0;
         endCount = 0;
     }
-    public LensControl(Integer now, Integer end)
-    {
-        nowCount = now;
-        endCount = end;
+
+    public LensControl(Integer nowCount, String up) {
+        this.nowCount = nowCount;
+        this.endCount = endCount;
+        this.nowDate = nowDate;
+        this.endDate = endDate;
     }
 
-    public void setNowCount(int now)
-    {
-        nowCount = now;
-    }
-    public void setEndCount(int end)
-    {
-        endCount = end;
+    public LensControl(Integer endCount) {
+        this.nowCount = nowCount;
+        this.endCount = endCount;
+        this.nowDate = nowDate;
+        this.endDate = endDate;
     }
 
-    public int getNowCount()
-    {
+    public LensControl(Integer nowCount, Integer endCount, Date nowDate, Date endDate) {
+        this.nowCount = nowCount;
+        this.endCount = endCount;
+        this.nowDate = nowDate;
+        this.endDate = endDate;
+    }
+
+
+    public Integer getNowCount() {
         return nowCount;
     }
-    public int getEndCount()
-    {
+
+    public void setNowCount(Integer nowCount) {
+        this.nowCount = nowCount;
+    }
+
+    public Integer getEndCount() {
         return endCount;
+    }
+
+    public void setEndCount(Integer endCount) {
+        this.endCount = endCount;
+    }
+
+    public Date getNowDate() {
+        return nowDate;
+    }
+
+    public void setNowDate(Date nowDate) {
+        this.nowDate = nowDate;
+    }
+
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
     }
 
     public void nowCountPlus()
@@ -47,6 +77,6 @@ public class LensControl {
     {
         nowCount -= 1;
     }
-    */
+
 
 }

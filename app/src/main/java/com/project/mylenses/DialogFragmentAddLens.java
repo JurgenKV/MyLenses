@@ -62,12 +62,12 @@ public class DialogFragmentAddLens extends DialogFragment {
 
     public void createLens(String count, String mode){
         Calendar nowDay = new GregorianCalendar();
-        switch (mode){
+        switch (mode){  // мб убрать свич полностью, аля смысл его?
             case "toUp":
-                LensControl lensControlUp = new LensControl(Integer.parseInt(count), nowDay,LensControl.createEndDate(Integer.parseInt(count), nowDay), mode );
+                LensControl lensControlUp = new LensControl(mode, Integer.parseInt(count), nowDay,LensControl.createEndDate(Integer.parseInt(count), nowDay));
                 break;
             case "toDown":
-                LensControl lensControlDown = new LensControl(Integer.parseInt(count), nowDay,LensControl.createEndDate(Integer.parseInt(count), nowDay), mode );
+                LensControl lensControlDown = new LensControl(mode, Integer.parseInt(count), nowDay,LensControl.createEndDate(Integer.parseInt(count), nowDay));
                 break;
         }
         Log.d(TAG, "Success create " + mode);

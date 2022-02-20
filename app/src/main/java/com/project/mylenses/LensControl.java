@@ -14,7 +14,7 @@ public class LensControl {
         countUses = 0;
     }
 
-    public LensControl(Integer countUses,  Calendar nowDate, Calendar endDate, String countingMode) {
+    public LensControl(String countingMode,  Integer countUses, Calendar nowDate, Calendar endDate) {
         this.countUses = countUses;
         this.nowDate = nowDate;
         this.endDate = endDate;

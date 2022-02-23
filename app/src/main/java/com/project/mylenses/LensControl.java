@@ -1,7 +1,7 @@
 package com.project.mylenses;
 
-import java.util.Calendar;
-import java.util.GregorianCalendar;
+import android.icu.util.GregorianCalendar;
+import android.icu.util.Calendar;
 
 public class LensControl {
     private String countingMode;

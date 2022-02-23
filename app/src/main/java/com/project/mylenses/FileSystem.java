@@ -6,8 +6,11 @@ import static androidx.core.content.PackageManagerCompat.LOG_TAG;
 
 
 import android.icu.text.SimpleDateFormat;
+import android.icu.util.GregorianCalendar;
+import android.icu.util.Calendar;
 import android.os.Build;
 import android.util.Log;
+
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
@@ -23,9 +26,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.text.ParseException;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.Locale;
 import java.util.Objects;
 
@@ -57,8 +58,8 @@ public class FileSystem extends AppCompatActivity {
         String[] parseData = null;
         LensControl lensControlByFile;
 
-        Calendar calendar = new GregorianCalendar();
-        SimpleDateFormat format = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy", Locale.ENGLISH);
+        SimpleDateFormat nowSDF = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy", Locale.ENGLISH);
+        SimpleDateFormat endSDF = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy", Locale.ENGLISH);
 
         try {
             // открываем поток для чтения
@@ -74,10 +75,10 @@ public class FileSystem extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        format.parse(parseData[2]);
-        Calendar cal = format.getCalendar();
-        //////////////////////
-        lensControlByFile = new LensControl(parseData[0], Integer.parseInt(parseData[1]),  cal, format.parse(parseData[3]) ); // парс календарной строки
+        nowSDF.parse(parseData[2]);
+        endSDF.parse(parseData[3]);
+
+        lensControlByFile = new LensControl(parseData[0], Integer.parseInt(parseData[1]),  nowSDF.getCalendar(), endSDF.getCalendar() );
         return lensControlByFile;
     }
 

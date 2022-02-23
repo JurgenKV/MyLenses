@@ -8,14 +8,13 @@ import android.util.Log;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.TextView;
-
+import android.icu.util.GregorianCalendar;
+import android.icu.util.Calendar;
 import static android.content.ContentValues.TAG;
 
 import androidx.fragment.app.DialogFragment;
 import androidx.annotation.NonNull;
 
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 
 public class DialogFragmentAddLens extends DialogFragment {
 

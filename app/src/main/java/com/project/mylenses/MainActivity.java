@@ -5,9 +5,11 @@ import static com.project.mylenses.R.id.TextLostUses;
 import static com.project.mylenses.R.id.floatingActionButtonAdd;
 import static com.project.mylenses.R.id.toSettings;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -21,17 +23,25 @@ public class MainActivity extends AppCompatActivity {
 
     private FloatingActionButton fabAdd;
     private TextView txtLostUses;
+    private LensControl currentLensControl;
+    private FileSystem fileSystem;
 
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         fabAdd = findViewById(floatingActionButtonAdd);
         txtLostUses = findViewById(TextLostUses);
+
+
+        try{
+            currentLensControl = fileSystem.readFile();
+        }catch (Exception e){
+            Log.w(TAG, "File not found" );
+        }
         UpdateLostUses();
-
-
     }
 
     @Override
@@ -93,13 +103,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void UpdateLostUses(){
+        if(currentLensControl == null)
+            txtLostUses.setText("0");
+        else
+            txtLostUses.setText(currentLensControl.getCountUses());
 
-        txtLostUses.setText("try");
     }
 
     public void showDialog(){
         DialogFragmentAddLens dialog = new DialogFragmentAddLens();
         dialog.show(getSupportFragmentManager(), "Add");
+
     }
 
 

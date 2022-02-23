@@ -2,6 +2,9 @@ package com.project.mylenses;
 
 import android.icu.util.GregorianCalendar;
 import android.icu.util.Calendar;
+import android.os.Build;
+
+import androidx.annotation.RequiresApi;
 
 public class LensControl {
     private String countingMode;
@@ -11,14 +14,17 @@ public class LensControl {
 
     public LensControl()
     {
+        countingMode = null;
         countUses = 0;
+        nowDate = null;
+        endDate = null;
     }
 
     public LensControl(String countingMode,  Integer countUses, Calendar nowDate, Calendar endDate) {
+        this.countingMode = countingMode;
         this.countUses = countUses;
         this.nowDate = nowDate;
         this.endDate = endDate;
-        this.countingMode = countingMode;
     }
 
 
@@ -60,6 +66,7 @@ public class LensControl {
         countUses -= 1;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     public static Calendar createEndDate(Integer count, Calendar nowDay){
         Calendar endDay = nowDay;
         endDay.add(Calendar.DAY_OF_MONTH, count);

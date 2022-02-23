@@ -8,6 +8,7 @@ import android.util.Log;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.TextView;
+
 import static android.content.ContentValues.TAG;
 
 import androidx.fragment.app.DialogFragment;
@@ -35,8 +36,8 @@ public class DialogFragmentAddLens extends DialogFragment {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 try {
-                                     myMode = mode[i].toString();
-                                }catch (Exception e){
+                                    myMode = mode[i].toString();
+                                } catch (Exception e) {
                                     Log.d(TAG, "WARNING 1");
                                 }
                             }
@@ -46,7 +47,7 @@ public class DialogFragmentAddLens extends DialogFragment {
                 try {
                     createLens(userInputCount.getText().toString(), myMode);
                     dialogInterface.cancel();
-                } catch (Exception e){
+                } catch (Exception e) {
                     Log.d(TAG, "WARNING 2");
                 }
             }
@@ -60,17 +61,12 @@ public class DialogFragmentAddLens extends DialogFragment {
         return builder.create();
     }
 
-    public void createLens(String count, String mode){
+    public void createLens(String count, String mode) {
         Calendar nowDay = new GregorianCalendar();
-        switch (mode){  // мб убрать свич полностью, аля смысл его?
-            case "toUp":
-                LensControl lensControlUp = new LensControl(mode, Integer.parseInt(count), nowDay,LensControl.createEndDate(Integer.parseInt(count), nowDay));
-                break;
-            case "toDown":
-                LensControl lensControlDown = new LensControl(mode, Integer.parseInt(count), nowDay,LensControl.createEndDate(Integer.parseInt(count), nowDay));
-                break;
-        }
+        LensControl lensControlObj = new LensControl(mode, Integer.parseInt(count), nowDay, LensControl.createEndDate(Integer.parseInt(count), nowDay));
+        //запись в файл?
         Log.d(TAG, "Success create " + mode);
+        Log.d(TAG, "Success create " + lensControlObj);
     }
 
 }

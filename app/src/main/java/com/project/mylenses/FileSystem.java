@@ -5,8 +5,11 @@ import static android.provider.Telephony.Mms.Part.FILENAME;
 import static androidx.core.content.PackageManagerCompat.LOG_TAG;
 
 
+import android.icu.text.SimpleDateFormat;
+import android.os.Build;
 import android.util.Log;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.io.BufferedReader;
@@ -19,7 +22,11 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.text.ParseException;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.Locale;
 import java.util.Objects;
 
 public class FileSystem extends AppCompatActivity {
@@ -43,27 +50,35 @@ public class FileSystem extends AppCompatActivity {
             e.printStackTrace();
         }
     }
+    //Sat Nov 25 10:42:12 MSK 2017
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public LensControl readFile() throws ParseException {
 
-    public LensControl readFile() {
-        String[] data = null;
+        String[] parseData = null;
+        LensControl lensControlByFile;
+
+        Calendar calendar = new GregorianCalendar();
+        SimpleDateFormat format = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy", Locale.ENGLISH);
+
         try {
             // открываем поток для чтения
             BufferedReader br = new BufferedReader(new InputStreamReader(openFileInput(FILENAME_LENS)));
             String str = "";
             // читаем содержимое
             while ((str = br.readLine()) != null) {
-                data = str.split("\n");
-
+                parseData = str.split("\n");
                 Log.d(LOG_TAG, str);
             }
-           // LensControl lensControlByFile = new LensControl(data[0], Integer.parseInt(data[1]), data[2],data[3]); // парс календарной строки
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        return
+        format.parse(parseData[2]);
+        Calendar cal = format.getCalendar();
+        //////////////////////
+        lensControlByFile = new LensControl(parseData[0], Integer.parseInt(parseData[1]),  cal, format.parse(parseData[3]) ); // парс календарной строки
+        return lensControlByFile;
     }
 
     public String lensToFile(LensControl lensControl) {
@@ -75,7 +90,7 @@ public class FileSystem extends AppCompatActivity {
         return lensString;
     }
 
-    public
+   // public LensControl lensFromFile(String)
 
 
 }

@@ -16,11 +16,14 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.text.ParseException;
 import java.util.Locale;
 
@@ -28,17 +31,25 @@ import java.util.Locale;
 public class FileSystem extends AppCompatActivity {
 
     final String LOG_TAG = "myLogs";
-    private final static String FILENAME_LENS = "LensObj.txt";
+    private final static String FILENAME_LENS = "lensObj";
 
     @RequiresApi(api = Build.VERSION_CODES.N)
-    public void writeFileLens(LensControl lensControl) {
+    public void writeFileLens(LensControl lensControl, String FILENAME_LENS) {
         String toFile = lensToFile(lensControl);
-        FileOutputStream fos = null;
-        try {
+        FileOutputStream fos;
+        File file = new File(getFilesDir(), FILENAME_LENS);
 
+        if (!file.exists()) {
+            try {
+                file.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } // дескриптор или нет доступа ?
+        try {
             fos = openFileOutput(FILENAME_LENS, MODE_PRIVATE);
             fos.write(toFile.getBytes());
-            //    fos.close();
+            fos.close();
             // отрываем поток для записи
             //BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(openFileOutput(FILENAME_LENS, MODE_PRIVATE)));
             // пишем данные
@@ -50,20 +61,14 @@ public class FileSystem extends AppCompatActivity {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
-        } finally {
-            try {
-                if (fos != null)
-                    fos.close();
-            }catch(IOException ex){
-
-                Log.d(LOG_TAG, "WARNING NFC");
-            }
         }
+
+
     }
 
     //Sat Nov 25 10:42:12 MSK 2017
     @RequiresApi(api = Build.VERSION_CODES.N)
-    public LensControl readFile() throws ParseException {
+    public LensControl readFile(String FILENAME_LENS) throws ParseException {
 
         String[] parseData = null;
         LensControl lensControlByFile;

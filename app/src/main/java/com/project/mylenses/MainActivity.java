@@ -8,6 +8,7 @@ import static com.project.mylenses.R.id.toSettings;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.DialogFragment;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -34,7 +35,7 @@ import java.io.OutputStreamWriter;
 import java.text.ParseException;
 import java.util.Locale;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements DialogFragmentAddLens.NoticeDialogListener {
 
     private FloatingActionButton fabAdd;
     private TextView txtLostUses;
@@ -53,11 +54,20 @@ public class MainActivity extends AppCompatActivity {
         fabAdd = findViewById(floatingActionButtonAdd);
         txtLostUses = findViewById(TextLostUses);
 
+        fabAdd.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
+            @Override
+            public void onClick(View view) {
+                showDialog();
+            }
+        });
+
         try {
             currentLensControl = readFile(FILENAME_LENS);
         } catch (Exception e) {
             Log.w(TAG, "File not found");
         }
+
         UpdateLostUses();
     }
 
@@ -89,13 +99,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        fabAdd.setOnClickListener(new View.OnClickListener() {
-            @RequiresApi(api = Build.VERSION_CODES.N)
-            @Override
-            public void onClick(View view) {
-                showDialog();
-            }
-        });
+
         Log.d(TAG, "onResume");
     }
 
@@ -133,27 +137,16 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+
+
     //@RequiresApi(api = Build.VERSION_CODES.N)
     public void showDialog() {
         DialogFragmentAddLens dialog = new DialogFragmentAddLens();
-        dialog.show(getSupportFragmentManager(), "Add");
-//        dialog.setDialogListener(data -> {
-//            System.out.println(data);
-//            //setCurrentLensControl(data);
-//        });
-
-        dialog.setDialogListener(new DialogFragmentAddLens.CDFListener() {
-            @Override
-            public void action(LensControl data) {
-                System.out.printf(String.valueOf(data));
-                setCurrentLensControl(data);
-                writeFileLens(getCurrentLensControl(), FILENAME_LENS);
-            }
-        });
+        dialog.show(getSupportFragmentManager(), "DialogFragmentAddLens");
 
     }
 
-    //@RequiresApi(api = Build.VERSION_CODES.N)
+    @RequiresApi(api = Build.VERSION_CODES.N)
     public void writeFileLens(LensControl lensControl, String FILENAME_LENS) {
         String toFile = lensToFile(lensControl);
         try {
@@ -202,8 +195,7 @@ public class MainActivity extends AppCompatActivity {
         return lensControlByFile;
     }
 
-    //@RequiresApi(api = Build.VERSION_CODES.N)
-    @SuppressLint("NewApi")
+    @RequiresApi(api = Build.VERSION_CODES.N)
     public String lensToFile(LensControl lensControl) {
         String lensString = "";
         lensString += lensControl.getCountingMode() + "\n";
@@ -213,11 +205,33 @@ public class MainActivity extends AppCompatActivity {
         return lensString;
     }
 
-    public LensControl getCurrentLensControl() {
-        return currentLensControl;
+//    public LensControl getCurrentLensControl() {
+//        return currentLensControl;
+//    }
+//
+//    public void setCurrentLensControl(LensControl currentLensControl) {
+//        this.currentLensControl = currentLensControl;
+//    }
+
+//    @Override
+//    public void action(String data) {
+//        System.out.printf(String.valueOf(data));
+//        //setCurrentLensControl(data);
+//        //writeFileLens(getCurrentLensControl(), FILENAME_LENS);
+//        System.out.printf(data);
+//    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    @Override
+    public void onDialogPositiveClick(DialogFragment dialog, LensControl lensControl) {
+
+        System.out.printf(lensControl.toString());
+        currentLensControl = lensControl;
+        writeFileLens(currentLensControl, FILENAME_LENS);
+        dialog.dismiss();
     }
 
-    public void setCurrentLensControl(LensControl currentLensControl) {
-        this.currentLensControl = currentLensControl;
+    @Override
+    public void onDialogNegativeClick(DialogFragment dialog) {
     }
 }

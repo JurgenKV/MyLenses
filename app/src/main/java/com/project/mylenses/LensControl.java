@@ -20,7 +20,15 @@ public class LensControl {
         endDate = null;
     }
 
-    public LensControl(String countingMode,  Integer countUses, Calendar nowDate, Calendar endDate) {
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public LensControl(String countingMode, Integer countUses, Calendar endDate) {
+        this.countingMode = countingMode;
+        this.countUses = countUses;
+        this.nowDate = nowDate.getInstance();
+        this.endDate = endDate;
+    }
+
+    public LensControl(String countingMode, Integer countUses, Calendar nowDate, Calendar endDate) {
         this.countingMode = countingMode;
         this.countUses = countUses;
         this.nowDate = nowDate;

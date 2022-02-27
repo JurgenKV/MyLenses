@@ -69,16 +69,12 @@ public class DialogFragmentAddLens extends DialogFragment {
         LensControl lensControlObj = null;
 
         try {
-            Calendar nowDay = new GregorianCalendar();
-            lensControlObj = new LensControl(mode, Integer.parseInt(count), nowDay, LensControl.createEndDate(Integer.parseInt(count), nowDay));
+            Calendar endDay = new GregorianCalendar();
+            endDay.getInstance();
+            lensControlObj = new LensControl(mode, Integer.parseInt(count), LensControl.createEndDate(Integer.parseInt(count), endDay));
 
-            Log.d(TAG, "Success create " + mode + nowDay.getTime().toString());
-            Log.d(TAG, "Success create " + lensControlObj);
-            ///////////////////Проблема с текущим временем
-            String s = nowDay.getTime().toString();
-            Calendar ss = LensControl.createEndDate(Integer.parseInt(count), nowDay);
-            String sss = ss.getTime().toString();
-            ///////////////////
+            Log.d(TAG, "Success create " + mode + lensControlObj);
+
             return lensControlObj;
         } catch (Exception e) {
             Log.d(TAG, "Creation failed");

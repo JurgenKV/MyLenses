@@ -19,6 +19,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,6 +41,7 @@ public class MainActivity extends AppCompatActivity implements DialogFragmentAdd
     private FloatingActionButton fabAdd;
     private TextView txtLostUses;
     private LensControl currentLensControl;
+    private ProgressBar progressBar;
 
     private final static String FILENAME_LENS = "lensObj";
 
@@ -53,6 +55,7 @@ public class MainActivity extends AppCompatActivity implements DialogFragmentAdd
         setContentView(R.layout.activity_main);
         fabAdd = findViewById(floatingActionButtonAdd);
         txtLostUses = findViewById(TextLostUses);
+        progressBar = findViewById(R.id.progressBar);
 
         fabAdd.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.N)
@@ -123,23 +126,38 @@ public class MainActivity extends AppCompatActivity implements DialogFragmentAdd
         }
         return true;
     }
-
+    //Обновление кол-ва использований
+    @RequiresApi(api = Build.VERSION_CODES.N)
     public void UpdateLostUses() {
-        try {
+        if (currentLensControl.getCountingMode().equals("toUp")) {
+
             if (currentLensControl == null)
                 txtLostUses.setText("0");
             else
                 txtLostUses.setText(currentLensControl.getCountUses().toString());
-        } catch (Exception e) {
-            Log.d(LOG_TAG, "WARNING updCount");
+           // progressBar.setMax(currentLensControl.getCountUses());
+            progressBar.setProgress(currentLensControl.getCountUses(),false);
+
+        } else if (currentLensControl.getCountingMode().equals("toDown")) {
+
+            if (currentLensControl == null)
+                txtLostUses.setText("0");
+            else
+                txtLostUses.setText(currentLensControl.getCountUses().toString());
+
+            progressBar.setMax(-currentLensControl.getCountUses());
+            progressBar.setSecondaryProgress(0);
+
+
         }
     }
+
 
     public void showDialog() {
         DialogFragmentAddLens dialog = new DialogFragmentAddLens();
         dialog.show(getSupportFragmentManager(), "DialogFragmentAddLens");
     }
-
+    //Запись в файл объекта линз
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void writeFileLens(LensControl lensControl, String FILENAME_LENS) {
         String toFile = lensToFile(lensControl);
@@ -157,7 +175,7 @@ public class MainActivity extends AppCompatActivity implements DialogFragmentAdd
             e.printStackTrace();
         }
     }
-
+    //Парсинг файла линз
     @RequiresApi(api = Build.VERSION_CODES.N)
     public LensControl readFile(String FILENAME_LENS) throws ParseException {
 
@@ -187,7 +205,7 @@ public class MainActivity extends AppCompatActivity implements DialogFragmentAdd
 
         return lensControlByFile;
     }
-
+    //Преобразование объекта линз в строку
     @RequiresApi(api = Build.VERSION_CODES.N)
     public String lensToFile(LensControl lensControl) {
         String lensString = "";
@@ -197,8 +215,7 @@ public class MainActivity extends AppCompatActivity implements DialogFragmentAdd
         lensString += lensControl.getEndDate().getTime().toString();
         return lensString;
     }
-
-
+    //Кнопка диалогового окна "Ок"
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onDialogPositiveClick(DialogFragment dialog, LensControl lensControl) {

@@ -72,8 +72,13 @@ public class DialogFragmentAddLens extends DialogFragment {
             Calendar nowDay = new GregorianCalendar();
             lensControlObj = new LensControl(mode, Integer.parseInt(count), nowDay, LensControl.createEndDate(Integer.parseInt(count), nowDay));
 
-            Log.d(TAG, "Success create " + mode);
+            Log.d(TAG, "Success create " + mode + nowDay.getTime().toString());
             Log.d(TAG, "Success create " + lensControlObj);
+            ///////////////////Проблема с текущим временем
+            String s = nowDay.getTime().toString();
+            Calendar ss = LensControl.createEndDate(Integer.parseInt(count), nowDay);
+            String sss = ss.getTime().toString();
+            ///////////////////
             return lensControlObj;
         } catch (Exception e) {
             Log.d(TAG, "Creation failed");
@@ -83,7 +88,6 @@ public class DialogFragmentAddLens extends DialogFragment {
 
     public interface NoticeDialogListener {
         public void onDialogPositiveClick(DialogFragment dialog, LensControl lensControl);
-        public void onDialogNegativeClick(DialogFragment dialog);
     }
 
     @Override

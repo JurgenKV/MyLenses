@@ -69,7 +69,7 @@ public class LensControl {
     @RequiresApi(api = Build.VERSION_CODES.N)
     public static Calendar createEndDate(Integer count, Calendar nowDay){
         Calendar endDay = nowDay;
-        endDay.add(Calendar.DAY_OF_MONTH, count);
+        endDay.add(Calendar.DAY_OF_YEAR, count);
         return endDay;
     }
 }

@@ -98,8 +98,6 @@ public class MainActivity extends AppCompatActivity implements DialogFragmentAdd
     @Override
     protected void onResume() {
         super.onResume();
-
-
         Log.d(TAG, "onResume");
     }
 
@@ -112,7 +110,6 @@ public class MainActivity extends AppCompatActivity implements DialogFragmentAdd
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_menu, menu);
-
         return true;
     }
 
@@ -132,18 +129,15 @@ public class MainActivity extends AppCompatActivity implements DialogFragmentAdd
             if (currentLensControl == null)
                 txtLostUses.setText("0");
             else
-                txtLostUses.setText(currentLensControl.getCountUses());
+                txtLostUses.setText(currentLensControl.getCountUses().toString());
         } catch (Exception e) {
+            Log.d(LOG_TAG, "WARNING updCount");
         }
     }
 
-
-
-    //@RequiresApi(api = Build.VERSION_CODES.N)
     public void showDialog() {
         DialogFragmentAddLens dialog = new DialogFragmentAddLens();
         dialog.show(getSupportFragmentManager(), "DialogFragmentAddLens");
-
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -162,10 +156,8 @@ public class MainActivity extends AppCompatActivity implements DialogFragmentAdd
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 
-    //Sat Nov 25 10:42:12 MSK 2017
     @RequiresApi(api = Build.VERSION_CODES.N)
     public LensControl readFile(String FILENAME_LENS) throws ParseException {
 
@@ -179,30 +171,29 @@ public class MainActivity extends AppCompatActivity implements DialogFragmentAdd
             // открываем поток для чтения
             BufferedReader br = new BufferedReader(new InputStreamReader(openFileInput(FILENAME_LENS)));
             String str;
-            int i = 0;
             // читаем содержимое
             while ((str = br.readLine()) != null) {
-                parseData[i] = String.valueOf(str.split("\n"));
+                parseData = str.split(",\t");
                 Log.d(LOG_TAG, str);
-                i++;
             }
             Log.d(LOG_TAG, "Объект получен");
         } catch (IOException e) {
             e.printStackTrace();
         }
+
         nowSDF.parse(parseData[2]);
         endSDF.parse(parseData[3]);
-
         lensControlByFile = new LensControl(parseData[0], Integer.parseInt(parseData[1]), nowSDF.getCalendar(), endSDF.getCalendar());
+
         return lensControlByFile;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     public String lensToFile(LensControl lensControl) {
         String lensString = "";
-        lensString += lensControl.getCountingMode() + "\n";
-        lensString += lensControl.getCountUses().toString() + "\n";
-        lensString += lensControl.getNowDate().getTime().toString() + "\n";
+        lensString += lensControl.getCountingMode() + ",\t";
+        lensString += lensControl.getCountUses().toString() + ",\t";
+        lensString += lensControl.getNowDate().getTime().toString() + ",\t";
         lensString += lensControl.getEndDate().getTime().toString();
         return lensString;
     }
@@ -214,9 +205,7 @@ public class MainActivity extends AppCompatActivity implements DialogFragmentAdd
         System.out.printf(lensControl.toString());
         currentLensControl = lensControl;
         writeFileLens(currentLensControl, FILENAME_LENS);
+        UpdateLostUses();
     }
 
-    @Override
-    public void onDialogNegativeClick(DialogFragment dialog) {
-    }
 }

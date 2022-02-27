@@ -179,10 +179,12 @@ public class MainActivity extends AppCompatActivity implements DialogFragmentAdd
             // открываем поток для чтения
             BufferedReader br = new BufferedReader(new InputStreamReader(openFileInput(FILENAME_LENS)));
             String str;
+            int i = 0;
             // читаем содержимое
             while ((str = br.readLine()) != null) {
-                parseData = str.split("\n");
+                parseData[i] = String.valueOf(str.split("\n"));
                 Log.d(LOG_TAG, str);
+                i++;
             }
             Log.d(LOG_TAG, "Объект получен");
         } catch (IOException e) {
@@ -205,30 +207,13 @@ public class MainActivity extends AppCompatActivity implements DialogFragmentAdd
         return lensString;
     }
 
-//    public LensControl getCurrentLensControl() {
-//        return currentLensControl;
-//    }
-//
-//    public void setCurrentLensControl(LensControl currentLensControl) {
-//        this.currentLensControl = currentLensControl;
-//    }
-
-//    @Override
-//    public void action(String data) {
-//        System.out.printf(String.valueOf(data));
-//        //setCurrentLensControl(data);
-//        //writeFileLens(getCurrentLensControl(), FILENAME_LENS);
-//        System.out.printf(data);
-//    }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onDialogPositiveClick(DialogFragment dialog, LensControl lensControl) {
-
         System.out.printf(lensControl.toString());
         currentLensControl = lensControl;
         writeFileLens(currentLensControl, FILENAME_LENS);
-        dialog.dismiss();
     }
 
     @Override

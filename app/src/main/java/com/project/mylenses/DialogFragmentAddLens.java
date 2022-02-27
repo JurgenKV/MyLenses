@@ -11,6 +11,7 @@ import android.widget.EditText;
 
 import android.icu.util.GregorianCalendar;
 import android.icu.util.Calendar;
+
 import static android.content.ContentValues.TAG;
 
 import androidx.annotation.RequiresApi;
@@ -24,6 +25,8 @@ public class DialogFragmentAddLens extends DialogFragment {
     String myMode = "toUp";
     private final static String FILENAME_LENS = "lensObj";
     NoticeDialogListener listener;
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -42,23 +45,21 @@ public class DialogFragmentAddLens extends DialogFragment {
                             } catch (Exception e) {
                                 Log.d(TAG, "WARNING 1");
                             }
-                        }).setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        });
 
-            @RequiresApi(api = Build.VERSION_CODES.N)
-            public void onClick(DialogInterface dialogInterface, int i) {
-                try {
-                    listener.onDialogPositiveClick(DialogFragmentAddLens.this, createLens(userInputCount.getText().toString(), myMode));
-                    dialogInterface.cancel();
-                }catch (RuntimeException e){
-                    System.out.printf("runtimeEX");
-                }
+        builder.setPositiveButton("OK", (dialogInterface, i) -> {
+            try {
+                listener.onDialogPositiveClick(DialogFragmentAddLens.this, createLens(userInputCount.getText().toString(), myMode));
+                dialogInterface.cancel();
+            } catch (RuntimeException e) {
+                System.out.printf("runtimeEX");
             }
-        }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialogInterface, int i) {
-                listener.onDialogNegativeClick(DialogFragmentAddLens.this);
-            }
-
+        dialogInterface.dismiss();
         });
+
+        builder.setNegativeButton("Cancel", ((dialogInterface, i) -> {
+            dialogInterface.dismiss();
+        }));
 
         return builder.create();
     }
@@ -74,7 +75,7 @@ public class DialogFragmentAddLens extends DialogFragment {
             Log.d(TAG, "Success create " + mode);
             Log.d(TAG, "Success create " + lensControlObj);
             return lensControlObj;
-        }catch (Exception e){
+        } catch (Exception e) {
             Log.d(TAG, "Creation failed");
         }
         return lensControlObj;
@@ -95,9 +96,5 @@ public class DialogFragmentAddLens extends DialogFragment {
                     + " must implement NoticeDialogListener");
         }
     }
-
-//    public void setDialogListener(CDFListener listener) {
-//        this.listener = listener;
-//    }
 
 }

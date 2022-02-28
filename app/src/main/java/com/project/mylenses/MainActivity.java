@@ -19,6 +19,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -42,6 +43,8 @@ public class MainActivity extends AppCompatActivity implements DialogFragmentAdd
     private TextView txtLostUses;
     private LensControl currentLensControl;
     private ProgressBar progressBar;
+    private Button buttonPlusOne;
+    private Button buttonMinusOne;
 
     private final static String FILENAME_LENS = "lensObj";
 
@@ -56,6 +59,8 @@ public class MainActivity extends AppCompatActivity implements DialogFragmentAdd
         fabAdd = findViewById(floatingActionButtonAdd);
         txtLostUses = findViewById(TextLostUses);
         progressBar = findViewById(R.id.progressBar);
+        buttonPlusOne = findViewById(R.id.buttonPlusOne);
+        buttonMinusOne = findViewById(R.id.buttonMinusOne);
 
         fabAdd.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.N)
@@ -67,22 +72,37 @@ public class MainActivity extends AppCompatActivity implements DialogFragmentAdd
 
         try {
             currentLensControl = readFile(FILENAME_LENS);
+
         } catch (Exception e) {
             Log.w(TAG, "File not found");
         }
+        setVisibleButtons();
 
         UpdateLostUses();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        try {
+            writeFileLens(currentLensControl, FILENAME_LENS);
+        } catch (Exception e) {
+            Log.w(TAG, "onDestroy: can't write File");
+        }
+
         Log.d(TAG, "onDestroy");
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onStop() {
         super.onStop();
+        try {
+            writeFileLens(currentLensControl, FILENAME_LENS);
+        } catch (Exception e) {
+            Log.w(TAG, "onStop: can't write File");
+        }
         Log.d(TAG, "onStop");
     }
 
@@ -101,6 +121,24 @@ public class MainActivity extends AppCompatActivity implements DialogFragmentAdd
     @Override
     protected void onResume() {
         super.onResume();
+        buttonPlusOne.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
+            public void onClick(View v) {
+                currentLensControl.countUsesPlus();
+                UpdateLostUses(); //вынести мб в другую часть
+
+            }
+        });
+
+        buttonMinusOne.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
+            public void onClick(View v) {
+                currentLensControl.countUsesMinus();
+                UpdateLostUses(); //вынести мб в другую часть
+            }
+        });
+
+
         Log.d(TAG, "onResume");
     }
 
@@ -126,17 +164,24 @@ public class MainActivity extends AppCompatActivity implements DialogFragmentAdd
         }
         return true;
     }
+
     //Обновление кол-ва использований
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void UpdateLostUses() {
+
+        if (currentLensControl == null) {
+            txtLostUses.setText("0");
+            return;
+        }
+
         if (currentLensControl.getCountingMode().equals("toUp")) {
 
             if (currentLensControl == null)
                 txtLostUses.setText("0");
             else
                 txtLostUses.setText(currentLensControl.getCountUses().toString());
-           // progressBar.setMax(currentLensControl.getCountUses());
-            progressBar.setProgress(currentLensControl.getCountUses(),false);
+            // progressBar.setMax(currentLensControl.getCountUses());
+            progressBar.setProgress(currentLensControl.getCountUses(), false);
 
         } else if (currentLensControl.getCountingMode().equals("toDown")) {
 
@@ -148,7 +193,6 @@ public class MainActivity extends AppCompatActivity implements DialogFragmentAdd
             progressBar.setMax(-currentLensControl.getCountUses());
             progressBar.setSecondaryProgress(0);
 
-
         }
     }
 
@@ -157,6 +201,7 @@ public class MainActivity extends AppCompatActivity implements DialogFragmentAdd
         DialogFragmentAddLens dialog = new DialogFragmentAddLens();
         dialog.show(getSupportFragmentManager(), "DialogFragmentAddLens");
     }
+
     //Запись в файл объекта линз
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void writeFileLens(LensControl lensControl, String FILENAME_LENS) {
@@ -175,6 +220,7 @@ public class MainActivity extends AppCompatActivity implements DialogFragmentAdd
             e.printStackTrace();
         }
     }
+
     //Парсинг файла линз
     @RequiresApi(api = Build.VERSION_CODES.N)
     public LensControl readFile(String FILENAME_LENS) throws ParseException {
@@ -205,6 +251,7 @@ public class MainActivity extends AppCompatActivity implements DialogFragmentAdd
 
         return lensControlByFile;
     }
+
     //Преобразование объекта линз в строку
     @RequiresApi(api = Build.VERSION_CODES.N)
     public String lensToFile(LensControl lensControl) {
@@ -215,6 +262,7 @@ public class MainActivity extends AppCompatActivity implements DialogFragmentAdd
         lensString += lensControl.getEndDate().getTime().toString();
         return lensString;
     }
+
     //Кнопка диалогового окна "Ок"
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
@@ -223,6 +271,18 @@ public class MainActivity extends AppCompatActivity implements DialogFragmentAdd
         currentLensControl = lensControl;
         writeFileLens(currentLensControl, FILENAME_LENS);
         UpdateLostUses();
+        setVisibleButtons();
+    }
+
+    public void setVisibleButtons() {
+
+        if (currentLensControl == null) {
+            buttonPlusOne.setVisibility(View.INVISIBLE);
+            buttonMinusOne.setVisibility(View.INVISIBLE);
+        }else{
+            buttonPlusOne.setVisibility(View.VISIBLE);
+            buttonMinusOne.setVisibility(View.VISIBLE);
+        }
     }
 
 }
